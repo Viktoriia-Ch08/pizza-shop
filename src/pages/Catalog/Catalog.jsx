@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react';
 import { readData } from '../../../services';
+import {
+  Card,
+  CardSet,
+  InfoWrap,
+  PizzaImage,
+  TextThumb,
+  // ToppingImage,
+} from './Catalog.styled';
 
 const Catalog = () => {
   const [databaseInfo, setDatabaseInfo] = useState(null);
@@ -16,21 +24,28 @@ const Catalog = () => {
     <>
       <button>Catalog</button>
       {databaseInfo !== null && (
-        <ul>
+        <CardSet>
           {databaseInfo.pizzas.map(
-            ({ name, description, type, price, imageUrl, toppings }) => {
+            ({ name, description, type, price, imageUrl, id }) => {
               return (
-                <li key={`${name}${price}${type}`}>
-                  <img src={imageUrl} alt={name} width={'150px'} />
-                  <p>{name}</p>
-                  <p>{description}</p>
-                  <p>{price}$</p>
-                  <div>
+                <Card key={`${name}${price}${type}`}>
+                  <InfoWrap>
+                    <PizzaImage src={imageUrl} alt={name} />
+                    <TextThumb>
+                      <p>{name}</p>
+                      <p>{description}</p>
+                      <p>{price}$</p>
+                    </TextThumb>
+                  </InfoWrap>
+                  <button type="button" onClick={() => console.log(id)}>
+                    Order
+                  </button>
+                  {/* <div>
                     <ul>
                       {toppings.map(({ name, portion, price, imageUrl }) => {
                         return (
                           <li key={`${name}${portion}${price}`}>
-                            <img src={imageUrl} alt={name} width={'50px'} />
+                            <ToppingImage src={imageUrl} alt={name} />
                             <p>{name}</p>
                             <p>{portion}</p>
                             <p>{price}$</p>
@@ -38,12 +53,12 @@ const Catalog = () => {
                         );
                       })}
                     </ul>
-                  </div>
-                </li>
+                  </div> */}
+                </Card>
               );
             }
           )}
-        </ul>
+        </CardSet>
       )}
     </>
   );
