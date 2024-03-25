@@ -1,46 +1,61 @@
 import { useEffect, useState } from 'react';
-import { readData } from '../../../services';
+import { LIMIT_NUMBER, getData } from '../../../services/dataServices';
 import {
   Card,
   CardSet,
   InfoWrap,
+  OrderBtnWrap,
   PizzaImage,
-  TextThumb,
   // ToppingImage,
 } from './Catalog.styled';
+import { useSelector } from 'react-redux';
+import { selectPizzas } from '../../redux/selectors';
+import { successfullNotification } from '../../../services/notifications';
+import { Button } from '../../App.styled';
+import Modal from '../../components/Modal/Modal';
 
 const Catalog = () => {
-  const [databaseInfo, setDatabaseInfo] = useState(null);
-  console.log(databaseInfo);
+  const [limitedCards, setLimitedCards] = useState([]);
+  const [limit, setLimit] = useState(LIMIT_NUMBER);
+  const [lastPage, setLastPage] = useState(false);
+  const [show, setShow] = useState(false);
+  const pizzas = useSelector(selectPizzas);
+
   useEffect(() => {
-    const fetchInfoFromDatabase = async () => {
-      // if (!auth.currentUser) return;
-      setDatabaseInfo(await readData());
+    const fetchLimitedCardsNumber = async () => {
+      setLimitedCards(await getData(limit));
     };
-    fetchInfoFromDatabase();
-  }, []);
+    fetchLimitedCardsNumber();
+  }, [limit]);
+
+  const getNextCards = () => {
+    if (limit + LIMIT_NUMBER >= pizzas.length) {
+      setLastPage(true);
+      successfullNotification('You rich the end of the list!');
+    }
+    setLimit(prev => prev + LIMIT_NUMBER);
+  };
 
   return (
-    <>
-      <button>Catalog</button>
-      {databaseInfo !== null && (
+    <section className="main-container">
+      {pizzas.length > 0 && (
         <CardSet>
-          {databaseInfo.pizzas.map(
-            ({ name, description, type, price, imageUrl, id }) => {
-              return (
-                <Card key={`${name}${price}${type}`}>
-                  <InfoWrap>
-                    <PizzaImage src={imageUrl} alt={name} />
-                    <TextThumb>
-                      <p>{name}</p>
-                      <p>{description}</p>
-                      <p>{price}$</p>
-                    </TextThumb>
-                  </InfoWrap>
-                  <button type="button" onClick={() => console.log(id)}>
+          {limitedCards.map(({ name, description, type, price, imageUrl }) => {
+            return (
+              <Card key={`${name}${price}${type}`}>
+                <InfoWrap>
+                  <PizzaImage src={imageUrl} alt={name} />
+                  <p>{name}</p>
+                  <p>{description}</p>
+                </InfoWrap>
+                <OrderBtnWrap>
+                  <Button type="button" onClick={() => setShow(true)}>
                     Order
-                  </button>
-                  {/* <div>
+                  </Button>
+                  <p>{price}$</p>
+                </OrderBtnWrap>
+
+                {/* <div>
                     <ul>
                       {toppings.map(({ name, portion, price, imageUrl }) => {
                         return (
@@ -54,13 +69,20 @@ const Catalog = () => {
                       })}
                     </ul>
                   </div> */}
-                </Card>
-              );
-            }
-          )}
+              </Card>
+            );
+          })}
         </CardSet>
       )}
-    </>
+      {!lastPage && (
+        <Button onClick={() => getNextCards()}>Load More...</Button>
+      )}
+      {show && (
+        <Modal setShow={setShow}>
+          <div>Hello</div>
+        </Modal>
+      )}
+    </section>
   );
 };
 
