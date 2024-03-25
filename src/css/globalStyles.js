@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+import { device } from './deviceSize';
 
 export const GlobalStyles = createGlobalStyle`
 :root{
@@ -27,5 +28,28 @@ export const GlobalStyles = createGlobalStyle`
 
 a, button, input, select{
     cursor: pointer;
+}
+
+.main-container {
+  width: 100%;
+  margin: 0 auto; 
+  
+  @media ${device.mobile} {
+        max-width: 320px;
+        }
+  
+  @media ${device.tablet} {
+        max-width: 744px;
+        
+        }
+
+    @media ${device.desktop} {        
+        max-width: 1180px;       
+      
+      }
+}
+
+section{
+  padding: 40px 0;
 }
 `;
