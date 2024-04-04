@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { LIMIT_NUMBER, getData } from '../../../services/dataServices';
+import { useEffect, useState } from "react";
+import { LIMIT_NUMBER, getData } from "../../../services/dataServices";
 import {
   Card,
   CardSet,
@@ -7,12 +7,13 @@ import {
   OrderBtnWrap,
   PizzaImage,
   // ToppingImage,
-} from './Catalog.styled';
-import { useSelector } from 'react-redux';
-import { selectPizzas } from '../../redux/selectors';
-import { successfullNotification } from '../../../services/notifications';
-import { Button } from '../../App.styled';
-import Modal from '../../components/Modal/Modal';
+} from "./Catalog.styled";
+import { useSelector } from "react-redux";
+import { selectPizzas } from "../../redux/selectors";
+import { successfullNotification } from "../../../services/notifications";
+import { Button } from "../../App.styled";
+import Modal from "../../components/Modal/Modal";
+import PizzaModal from "../../components/Modal/PizzaModal/PizzaModal";
 
 const Catalog = () => {
   const [limitedCards, setLimitedCards] = useState([]);
@@ -20,6 +21,7 @@ const Catalog = () => {
   const [lastPage, setLastPage] = useState(false);
   const [show, setShow] = useState(false);
   const pizzas = useSelector(selectPizzas);
+  const [chosenPizzaId, setChosenPizzaId] = useState(null);
 
   useEffect(() => {
     const fetchLimitedCardsNumber = async () => {
@@ -31,31 +33,38 @@ const Catalog = () => {
   const getNextCards = () => {
     if (limit + LIMIT_NUMBER >= pizzas.length) {
       setLastPage(true);
-      successfullNotification('You rich the end of the list!');
+      successfullNotification("You rich the end of the list!");
     }
-    setLimit(prev => prev + LIMIT_NUMBER);
+    setLimit((prev) => prev + LIMIT_NUMBER);
   };
 
   return (
     <section className="main-container">
       {pizzas.length > 0 && (
         <CardSet>
-          {limitedCards.map(({ name, description, type, price, imageUrl }) => {
-            return (
-              <Card key={`${name}${price}${type}`}>
-                <InfoWrap>
-                  <PizzaImage src={imageUrl} alt={name} />
-                  <p>{name}</p>
-                  <p>{description}</p>
-                </InfoWrap>
-                <OrderBtnWrap>
-                  <Button type="button" onClick={() => setShow(true)}>
-                    Order
-                  </Button>
-                  <p>{price}$</p>
-                </OrderBtnWrap>
+          {limitedCards.map(
+            ({ name, description, type, price, imageUrl, id }) => {
+              return (
+                <Card key={`${name}${price}${type}`}>
+                  <InfoWrap>
+                    <PizzaImage src={imageUrl} alt={name} />
+                    <p>{name}</p>
+                    <p>{description}</p>
+                  </InfoWrap>
+                  <OrderBtnWrap>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        setChosenPizzaId(id);
+                        setShow(true);
+                      }}
+                    >
+                      Order
+                    </Button>
+                    <p>{price}$</p>
+                  </OrderBtnWrap>
 
-                {/* <div>
+                  {/* <div>
                     <ul>
                       {toppings.map(({ name, portion, price, imageUrl }) => {
                         return (
@@ -69,9 +78,10 @@ const Catalog = () => {
                       })}
                     </ul>
                   </div> */}
-              </Card>
-            );
-          })}
+                </Card>
+              );
+            }
+          )}
         </CardSet>
       )}
       {!lastPage && (
@@ -79,7 +89,7 @@ const Catalog = () => {
       )}
       {show && (
         <Modal setShow={setShow}>
-          <div>Hello</div>
+          <PizzaModal id={chosenPizzaId} />
         </Modal>
       )}
     </section>

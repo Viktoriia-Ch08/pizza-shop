@@ -1,26 +1,26 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import {
   Backdrop,
   CloseBtnThumb,
   ModalCloseBtn,
   ModalIcon,
-} from './Modal.styled';
+} from "./Modal.styled";
 
 const Modal = ({ children, setShow }) => {
   useEffect(() => {
-    const handleKeyDown = e => {
-      if (e.code === 'Escape') {
+    const handleKeyDown = (e) => {
+      if (e.code === "Escape") {
         setShow(false);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [setShow]);
 
-  const handleBackdropClick = e => {
+  const handleBackdropClick = (e) => {
     if (e.currentTarget === e.target) {
       setShow(false);
     }
@@ -34,13 +34,13 @@ const Modal = ({ children, setShow }) => {
               setShow(false);
             }}
           >
-            <ModalIcon
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="close-btn"
-            >
-              <path d="M5.293 5.293a1 1 0 0 1 1.414 0L12 10.586l5.293-5.293a1 1 0 1 1 1.414 1.414L13.414 12l5.293 5.293a1 1 0 0 1-1.414 1.414L12 13.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L10.586 12 5.293 6.707a1 1 0 0 1 0-1.414z" />
+            <ModalIcon fill="none" viewBox="0 0 15 15">
+              <path
+                fill="currentColor"
+                fillRule="evenodd"
+                d="M11.782 4.032a.575.575 0 10-.813-.814L7.5 6.687 4.032 3.218a.575.575 0 00-.814.814L6.687 7.5l-3.469 3.468a.575.575 0 00.814.814L7.5 8.313l3.469 3.469a.575.575 0 00.813-.814L8.313 7.5l3.469-3.468z"
+                clipRule="evenodd"
+              />
             </ModalIcon>
           </ModalCloseBtn>
         </CloseBtnThumb>
