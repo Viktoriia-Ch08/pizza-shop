@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import { LIMIT_NUMBER, getData } from "../../../services/dataServices";
+import { LIMIT_NUMBER, getData } from "../../services/dataServices";
 import {
   Card,
   CardSet,
   InfoWrap,
   OrderBtnWrap,
   PizzaImage,
-  // ToppingImage,
 } from "./Catalog.styled";
 import { useSelector } from "react-redux";
 import { selectPizzas } from "../../redux/selectors";
-import { successfullNotification } from "../../../services/notifications";
+import { successfullNotification } from "../../services/notifications";
 import { Button } from "../../App.styled";
 import Modal from "../../components/Modal/Modal";
 import PizzaModal from "../../components/Modal/PizzaModal/PizzaModal";
@@ -48,7 +47,7 @@ const Catalog = () => {
                 <Card key={`${name}${price}${type}`}>
                   <InfoWrap>
                     <PizzaImage src={imageUrl} alt={name} />
-                    <p>{name}</p>
+                    <h2>{name}</h2>
                     <p>{description}</p>
                   </InfoWrap>
                   <OrderBtnWrap>
@@ -63,21 +62,6 @@ const Catalog = () => {
                     </Button>
                     <p>{price}$</p>
                   </OrderBtnWrap>
-
-                  {/* <div>
-                    <ul>
-                      {toppings.map(({ name, portion, price, imageUrl }) => {
-                        return (
-                          <li key={`${name}${portion}${price}`}>
-                            <ToppingImage src={imageUrl} alt={name} />
-                            <p>{name}</p>
-                            <p>{portion}</p>
-                            <p>{price}$</p>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div> */}
                 </Card>
               );
             }
@@ -89,7 +73,7 @@ const Catalog = () => {
       )}
       {show && (
         <Modal setShow={setShow}>
-          <PizzaModal id={chosenPizzaId} />
+          <PizzaModal id={chosenPizzaId} setShow={setShow} />
         </Modal>
       )}
     </section>
