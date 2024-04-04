@@ -1,5 +1,5 @@
-import { limitToFirst, onValue, query, ref } from 'firebase/database';
-import { database } from '../firebase';
+import { limitToFirst, onValue, query, ref } from "firebase/database";
+import { database } from "../../firebase";
 
 export const LIMIT_NUMBER = 3;
 
@@ -8,11 +8,11 @@ export function readData() {
     const dataRef = ref(database);
     onValue(
       dataRef,
-      snapshot => {
+      (snapshot) => {
         const data = snapshot.val();
         resolve(data);
       },
-      error => {
+      (error) => {
         console.log(error.message);
         reject(error.message);
       }
@@ -22,14 +22,14 @@ export function readData() {
 
 export function getData(limit) {
   return new Promise((resolve, reject) => {
-    const viewedCards = query(ref(database, 'pizzas'), limitToFirst(limit));
+    const viewedCards = query(ref(database, "pizzas"), limitToFirst(limit));
     onValue(
       viewedCards,
-      snapshot => {
+      (snapshot) => {
         const data = snapshot.val();
         resolve(data);
       },
-      error => {
+      (error) => {
         console.log(error.message);
         reject(error.message);
       }
