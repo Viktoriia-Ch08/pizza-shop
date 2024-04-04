@@ -1,15 +1,25 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { fetchInfo } from './operations';
+import { createSlice } from "@reduxjs/toolkit";
+import { fetchInfo } from "./operations";
 
-const dataSlice = createSlice({
-  name: 'data',
+const pizzasSlice = createSlice({
+  name: "pizzas",
   initialState: {
     pizzas: [],
+    order: [],
     isLoading: false,
     error: null,
   },
-  reducers: {},
-  extraReducers: builder => {
+  reducers: {
+    addOrder(state, action) {
+      state.order.unshift(action.payload);
+    },
+    deleteFromOrder(state, action) {
+      state.order = state.order.filter(
+        (pizza) => JSON.stringify(pizza) !== JSON.stringify(action.payload)
+      );
+    },
+  },
+  extraReducers: (builder) => {
     builder.addCase(fetchInfo.fulfilled, (state, action) => {
       state.isLoading = false;
       state.pizzas = [...state.pizzas, ...action.payload.pizzas];
@@ -26,10 +36,5 @@ const dataSlice = createSlice({
   },
 });
 
-export const dataReducer = dataSlice.reducer;
-export const {
-  setPageValue,
-  setMakeFilterValue,
-  resetFilters,
-  setPriceFilterValue,
-} = dataSlice.actions;
+export const pizzasReducer = pizzasSlice.reducer;
+export const { addOrder, deleteFromOrder } = pizzasSlice.actions;

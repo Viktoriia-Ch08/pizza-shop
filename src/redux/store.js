@@ -1,8 +1,8 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { dataReducer } from './pizzasSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import { pizzasReducer } from "./pizzasSlice";
 
 export const store = configureStore({
   reducer: {
-    data: dataReducer,
+    data: pizzasReducer,
   },
 });
