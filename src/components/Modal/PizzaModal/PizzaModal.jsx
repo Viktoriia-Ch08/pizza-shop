@@ -1,41 +1,37 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectPizzas } from "../../../redux/selectors";
-import { ToppingImage } from "../../../pages/Catalog/Catalog.styled";
-import { ToppingBtn } from "./PizzaModal.styled";
+import { useDispatch, useSelector } from "react-redux";
+import { selectOrder, selectPizzas } from "../../../redux/selectors";
+import { addOrder } from "../../../redux/pizzasSlice";
+import { successfullNotification } from "../../../services/notifications";
+import Toppings from "../../Toppings/Toppings";
+import { nanoid } from "@reduxjs/toolkit";
 
-const PizzaModal = ({ id }) => {
+const PizzaModal = ({ id, setShow }) => {
   const pizzas = useSelector(selectPizzas);
   const [chosenPizza, setChosenPizza] = useState({});
   const [chosenToppings, setChosenToppings] = useState([]);
-  const [isChosenTopping, setChosenTopping] = useState(false);
+  const dispatch = useDispatch();
+  const { name, description, type, price, imageUrl, toppings } = chosenPizza;
 
   useEffect(() => {
     const index = pizzas.findIndex((pizza) => pizza.id === id);
     setChosenPizza(pizzas[index]);
   }, []);
-  const { name, description, type, price, imageUrl, toppings } = chosenPizza;
 
-  const chooseTopping = (id) => {
-    if (chosenToppings.length < 0) {
-      return;
-    }
+  const saveOrder = () => {
+    // const isPizzaOrdered = order.some(
+    //   (pizza) => pizza.name === chosenPizza.name
+    // );
+    // if (isPizzaOrdered) {
+    //   alert("pizza was already added");
+    //   return;
+    // }
 
-    const index = toppings.findIndex((topping) => topping.id === id);
-    const topping = toppings[index];
-    const isExistingTopping = chosenToppings.findIndex(
-      (el) => el.id === topping.id
+    dispatch(
+      addOrder({ ...chosenPizza, toppings: chosenToppings, id: nanoid() })
     );
-
-    if (isExistingTopping !== -1) {
-      setChosenToppings([
-        ...chosenToppings.filter((el) => el.id !== topping.id),
-      ]);
-      document.body.classList.remove("chosen-topping");
-      return;
-    }
-    setChosenToppings([...chosenToppings, topping]);
-    document.body.classList.add("chosen-topping");
+    setShow(false);
+    successfullNotification("Pizza successfully added");
   };
 
   return (
@@ -46,27 +42,16 @@ const PizzaModal = ({ id }) => {
       <p>{type}</p>
       <p>{price}</p>
       <ul>
-        {Object.keys(chosenPizza).length &&
-          toppings.map(({ name, portion, price, imageUrl, id }) => {
-            return (
-              <li key={`${name}${portion}${price}`}>
-                <ToppingBtn
-                  type="button"
-                  onClick={() => {
-                    chooseTopping(id);
-                    setChosenTopping(true);
-                  }}
-                  className="topping"
-                >
-                  <ToppingImage src={imageUrl} alt={name} />
-                  <p>{name}</p>
-                  <p>{portion}</p>
-                  <p>{price}$</p>
-                </ToppingBtn>
-              </li>
-            );
-          })}
+        <Toppings
+          chosenPizza={chosenPizza}
+          toppings={toppings}
+          chosenToppings={chosenToppings}
+          setChosenToppings={setChosenToppings}
+        />
       </ul>
+      <button type="button" onClick={saveOrder}>
+        Add to cart
+      </button>
     </div>
   );
 };

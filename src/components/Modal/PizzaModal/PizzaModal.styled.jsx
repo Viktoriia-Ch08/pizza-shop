@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
-export const ToppingItem = styled.li``;
-
-export const ToppingBtn = styled.button`
+export const ToppingCheckbox = styled.input`
   background-color: aqua;
 
   &.chosen-topping {
