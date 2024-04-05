@@ -19,7 +19,16 @@ const ShoppingList = () => {
       <ul>
         {order.length > 0 &&
           order.map(
-            ({ name, description, type, price, imageUrl, toppings, id }) => {
+            ({
+              name,
+              description,
+              type,
+              price,
+              imageUrl,
+              toppings,
+              id,
+              amount,
+            }) => {
               return (
                 <li>
                   <img src={imageUrl} alt={name} />
@@ -36,6 +45,7 @@ const ShoppingList = () => {
                       );
                     })}
                   </ul>
+                  <p>x{amount}</p>
                   <button type="button" onClick={() => deleteFromOrderList(id)}>
                     delete from cart
                   </button>

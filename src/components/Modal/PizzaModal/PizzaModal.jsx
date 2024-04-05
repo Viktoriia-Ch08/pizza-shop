@@ -10,6 +10,7 @@ const PizzaModal = ({ id, setShow }) => {
   const pizzas = useSelector(selectPizzas);
   const [chosenPizza, setChosenPizza] = useState({});
   const [chosenToppings, setChosenToppings] = useState([]);
+  const [amount, setAmount] = useState(1);
   const dispatch = useDispatch();
   const { name, description, type, price, imageUrl, toppings } = chosenPizza;
 
@@ -19,19 +20,24 @@ const PizzaModal = ({ id, setShow }) => {
   }, []);
 
   const saveOrder = () => {
-    // const isPizzaOrdered = order.some(
-    //   (pizza) => pizza.name === chosenPizza.name
-    // );
-    // if (isPizzaOrdered) {
-    //   alert("pizza was already added");
-    //   return;
-    // }
-
     dispatch(
-      addOrder({ ...chosenPizza, toppings: chosenToppings, id: nanoid() })
+      addOrder({
+        ...chosenPizza,
+        toppings: chosenToppings,
+        id: nanoid(),
+        amount,
+      })
     );
     setShow(false);
     successfullNotification("Pizza successfully added");
+  };
+
+  const increaseAmount = () => {
+    setAmount((prev) => prev + 1);
+  };
+
+  const decreaseAmount = () => {
+    setAmount((prev) => prev - 1);
   };
 
   return (
@@ -49,6 +55,13 @@ const PizzaModal = ({ id, setShow }) => {
           setChosenToppings={setChosenToppings}
         />
       </ul>
+      <button type="button" onClick={decreaseAmount} disabled={amount <= 1}>
+        -
+      </button>
+      <p>{amount}</p>
+      <button type="button" onClick={increaseAmount} disabled={amount >= 10}>
+        +
+      </button>
       <button type="button" onClick={saveOrder}>
         Add to cart
       </button>
