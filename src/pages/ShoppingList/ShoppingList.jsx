@@ -6,7 +6,6 @@ import { nanoid } from "@reduxjs/toolkit";
 const ShoppingList = () => {
   const order = useSelector(selectOrder);
   const dispatch = useDispatch();
-  const key = nanoid();
 
   const deleteFromOrderList = (id) => {
     const pizzaToDelete = order.find((pizza) => pizza.id === id);
@@ -14,6 +13,10 @@ const ShoppingList = () => {
       dispatch(deleteFromOrder(pizzaToDelete));
       return;
     }
+  };
+
+  const finishOrder = () => {
+    setShow(true);
   };
 
   return (
@@ -32,7 +35,7 @@ const ShoppingList = () => {
               amount,
             }) => {
               return (
-                <li key={`${key}${name}${key}`}>
+                <li key={`${id}${name}${id}`}>
                   <img src={imageUrl} alt={name} />
                   <h2>{name}</h2>
                   <p>{description}</p>
@@ -41,7 +44,7 @@ const ShoppingList = () => {
                   <ul>
                     {toppings.map((topping) => {
                       return (
-                        <li key={key}>
+                        <li key={id}>
                           <p>{topping.name}</p>
                         </li>
                       );
@@ -56,6 +59,9 @@ const ShoppingList = () => {
             }
           )}
       </ul>
+      <button type="button" onClick={finishOrder}>
+        Confirm order
+      </button>
     </div>
   );
 };

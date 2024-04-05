@@ -18,6 +18,10 @@ const pizzasSlice = createSlice({
         (pizza) => JSON.stringify(pizza) !== JSON.stringify(action.payload)
       );
     },
+    changeAmount(state, action) {
+      state.order[action.payload.index].quantity = action.payload.quantity;
+      state.order[action.payload.index].price = action.payload.price;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchInfo.fulfilled, (state, action) => {
@@ -37,4 +41,4 @@ const pizzasSlice = createSlice({
 });
 
 export const pizzasReducer = pizzasSlice.reducer;
-export const { addOrder, deleteFromOrder } = pizzasSlice.actions;
+export const { addOrder, deleteFromOrder, changeAmount } = pizzasSlice.actions;
