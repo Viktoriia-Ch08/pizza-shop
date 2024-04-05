@@ -4,7 +4,6 @@ import { selectOrder, selectPizzas } from "../../../redux/selectors";
 import { addOrder, changeAmount } from "../../../redux/pizzasSlice";
 import { successfullNotification } from "../../../services/notifications";
 import Toppings from "../../Toppings/Toppings";
-import { nanoid } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
 
 const PizzaModal = ({ id, setShow }) => {
@@ -17,6 +16,10 @@ const PizzaModal = ({ id, setShow }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { name, description, type, price, imageUrl, toppings } = chosenPizza;
+  const toppingsName =
+    chosenToppings.length > 0
+      ? chosenToppings.map((topping) => topping.name).join("")
+      : "";
 
   useEffect(() => {
     const index = pizzas.findIndex((pizza) => pizza.id === id);
@@ -25,26 +28,21 @@ const PizzaModal = ({ id, setShow }) => {
   }, []);
 
   const saveOrder = () => {
-    const toppingsName =
-      chosenToppings.length > 0
-        ? chosenToppings.map((topping) => topping.name).join("")
-        : "";
-
     const newPizza = {
       ...chosenPizza,
       toppings: chosenToppings,
       id: `${chosenPizza.name}${toppingsName}`,
       quantity,
-      price: pizzaPrice * quantity,
+      price: pizzaPrice,
     };
 
     const existingPizzaIndex = order.findIndex(
       (pizza) => pizza.id === newPizza.id
     );
 
-    const pizza = order[existingPizzaIndex];
-
     if (existingPizzaIndex !== -1) {
+      const pizza = order[existingPizzaIndex];
+      debugger;
       dispatch(
         changeAmount({
           index: existingPizzaIndex,
@@ -62,10 +60,12 @@ const PizzaModal = ({ id, setShow }) => {
 
   const increaseQuantity = () => {
     setQuantity((prev) => prev + 1);
+    setPizzaPrice((prev) => prev + chosenPizza.price);
   };
 
   const decreaseQuantity = () => {
     setQuantity((prev) => prev - 1);
+    setPizzaPrice((prev) => prev - chosenPizza.price);
   };
 
   return (
@@ -104,7 +104,6 @@ const PizzaModal = ({ id, setShow }) => {
           navigate("/shopping-list");
         }}
       >
-        {" "}
         Go to Cart
       </button>
     </div>
