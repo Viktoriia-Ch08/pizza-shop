@@ -1,10 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { selectOrder } from "../../redux/selectors";
 import { deleteFromOrder } from "../../redux/pizzasSlice";
+import { nanoid } from "@reduxjs/toolkit";
 
 const ShoppingList = () => {
   const order = useSelector(selectOrder);
   const dispatch = useDispatch();
+  const key = nanoid();
 
   const deleteFromOrderList = (id) => {
     const pizzaToDelete = order.find((pizza) => pizza.id === id);
@@ -30,7 +32,7 @@ const ShoppingList = () => {
               amount,
             }) => {
               return (
-                <li>
+                <li key={`${key}${name}${key}`}>
                   <img src={imageUrl} alt={name} />
                   <h2>{name}</h2>
                   <p>{description}</p>
@@ -39,7 +41,7 @@ const ShoppingList = () => {
                   <ul>
                     {toppings.map((topping) => {
                       return (
-                        <li>
+                        <li key={key}>
                           <p>{topping.name}</p>
                         </li>
                       );

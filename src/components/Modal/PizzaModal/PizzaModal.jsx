@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectOrder, selectPizzas } from "../../../redux/selectors";
+import { selectPizzas } from "../../../redux/selectors";
 import { addOrder } from "../../../redux/pizzasSlice";
 import { successfullNotification } from "../../../services/notifications";
 import Toppings from "../../Toppings/Toppings";
