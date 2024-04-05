@@ -1,8 +1,36 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { pizzasReducer } from "./pizzasSlice";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+
+import storage from "redux-persist/lib/storage";
+
+const persistConfig = {
+  key: "data",
+  storage,
+  whitelist: ["order"],
+};
+
+const rootReducer = combineReducers({
+  data: persistReducer(persistConfig, pizzasReducer),
+});
 
 export const store = configureStore({
-  reducer: {
-    data: pizzasReducer,
-  },
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
+
+export const persistor = persistStore(store);
