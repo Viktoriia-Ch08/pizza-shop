@@ -5,6 +5,7 @@ import { addOrder } from "../../../redux/pizzasSlice";
 import { successfullNotification } from "../../../services/notifications";
 import Toppings from "../../Toppings/Toppings";
 import { nanoid } from "@reduxjs/toolkit";
+import { useNavigate } from "react-router-dom";
 
 const PizzaModal = ({ id, setShow }) => {
   const pizzas = useSelector(selectPizzas);
@@ -12,6 +13,7 @@ const PizzaModal = ({ id, setShow }) => {
   const [chosenToppings, setChosenToppings] = useState([]);
   const [amount, setAmount] = useState(1);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { name, description, type, price, imageUrl, toppings } = chosenPizza;
 
   useEffect(() => {
@@ -64,6 +66,16 @@ const PizzaModal = ({ id, setShow }) => {
       </button>
       <button type="button" onClick={saveOrder}>
         Add to cart
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          setShow(false);
+          navigate("/shopping-list");
+        }}
+      >
+        {" "}
+        Go to Cart
       </button>
     </div>
   );
