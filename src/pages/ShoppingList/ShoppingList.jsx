@@ -4,10 +4,13 @@ import { changeQuantity, deleteFromOrder } from "../../redux/pizzasSlice";
 import Modal from "../../components/Modal/Modal";
 import ConfirmModal from "../../components/Modal/ConfirmModal/ConfirmModal";
 import { useState } from "react";
+import { nanoid } from "nanoid";
+import GreetingModal from "../../components/Modal/GreetingModal/GreetingModal";
 
 const ShoppingList = () => {
   const order = useSelector(selectOrder);
   const [show, setShow] = useState(false);
+  const [isConfirmed, setConfirmed] = useState(false);
   const dispatch = useDispatch();
 
   const deleteFromOrderList = (id) => {
@@ -21,8 +24,6 @@ const ShoppingList = () => {
   const finishOrder = () => {
     setShow(true);
   };
-
-  const edit = () => {};
 
   return (
     <>
@@ -50,7 +51,7 @@ const ShoppingList = () => {
                     <ul>
                       {toppings.map((topping) => {
                         return (
-                          <li key={id}>
+                          <li key={`${id}${nanoid()}`}>
                             <p>{topping.name}</p>
                           </li>
                         );
@@ -104,9 +105,16 @@ const ShoppingList = () => {
           Confirm order
         </button>
       </div>
-      {/* <Modal setShow={setShow}>
-        <ConfirmModal setShow={setShow} />
-      </Modal> */}
+      {show && (
+        <Modal setShow={setShow}>
+          <ConfirmModal setShow={setShow} setConfirmed={setConfirmed} />
+        </Modal>
+      )}
+      {isConfirmed && (
+        <Modal setShow={setConfirmed}>
+          <GreetingModal setShow={setConfirmed} />
+        </Modal>
+      )}
     </>
   );
 };

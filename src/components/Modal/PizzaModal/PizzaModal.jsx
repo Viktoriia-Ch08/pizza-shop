@@ -21,11 +21,16 @@ const PizzaModal = ({ id, setShow }) => {
       ? chosenToppings.map((topping) => topping.name).join("")
       : "";
 
+  const toppingsPrice = chosenToppings.reduce(
+    (partialSum, el) => partialSum + el.price,
+    0
+  );
+
   useEffect(() => {
     const index = pizzas.findIndex((pizza) => pizza.id === id);
     setChosenPizza(pizzas[index]);
-    setPizzaPrice(pizzas[index].price);
-  }, []);
+    setPizzaPrice(pizzas[index].price + toppingsPrice);
+  }, [toppingsPrice]);
 
   const saveOrder = () => {
     const newPizza = {
@@ -47,7 +52,7 @@ const PizzaModal = ({ id, setShow }) => {
         changeQuantity({
           index: existingPizzaIndex,
           quantity: pizza.quantity + newPizza.quantity,
-          price: price * (pizza.quantity + newPizza.quantity),
+          price: (price + toppingsPrice) * (pizza.quantity + newPizza.quantity),
         })
       );
       return;
@@ -59,8 +64,9 @@ const PizzaModal = ({ id, setShow }) => {
   };
 
   const increaseQuantity = () => {
+    // debugger;
     setQuantity((prev) => prev + 1);
-    setPizzaPrice((prev) => prev + chosenPizza.price);
+    setPizzaPrice((prev) => prev + pizzaPrice);
   };
 
   const decreaseQuantity = () => {

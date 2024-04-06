@@ -1,4 +1,4 @@
-import { limitToFirst, onValue, query, ref } from "firebase/database";
+import { limitToFirst, onValue, query, ref, set } from "firebase/database";
 import { database } from "../../firebase";
 
 export const LIMIT_NUMBER = 3;
@@ -35,4 +35,26 @@ export function getData(limit) {
       }
     );
   });
+}
+
+export function writeUserData({
+  userId,
+  name = "none",
+  email = "none",
+  number = "",
+  orders: { id, order },
+  favorites = [],
+}) {
+  try {
+    return set(ref(database, "users/" + userId), {
+      userId,
+      name,
+      email,
+      number,
+      orders: { id, order },
+      favorites,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
 }
