@@ -18,7 +18,7 @@ const pizzasSlice = createSlice({
         (pizza) => JSON.stringify(pizza) !== JSON.stringify(action.payload)
       );
     },
-    changeAmount(state, action) {
+    changeQuantity(state, action) {
       state.order[action.payload.index].quantity = action.payload.quantity;
       state.order[action.payload.index].price = action.payload.price;
     },
@@ -41,4 +41,5 @@ const pizzasSlice = createSlice({
 });
 
 export const pizzasReducer = pizzasSlice.reducer;
-export const { addOrder, deleteFromOrder, changeAmount } = pizzasSlice.actions;
+export const { addOrder, deleteFromOrder, changeQuantity } =
+  pizzasSlice.actions;

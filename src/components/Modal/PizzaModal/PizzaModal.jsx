@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectOrder, selectPizzas } from "../../../redux/selectors";
-import { addOrder, changeAmount } from "../../../redux/pizzasSlice";
+import { addOrder, changeQuantity } from "../../../redux/pizzasSlice";
 import { successfullNotification } from "../../../services/notifications";
 import Toppings from "../../Toppings/Toppings";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +44,7 @@ const PizzaModal = ({ id, setShow }) => {
       const pizza = order[existingPizzaIndex];
       debugger;
       dispatch(
-        changeAmount({
+        changeQuantity({
           index: existingPizzaIndex,
           quantity: pizza.quantity + newPizza.quantity,
           price: price * (pizza.quantity + newPizza.quantity),

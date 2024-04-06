@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { selectOrder } from "../../redux/selectors";
-import { deleteFromOrder } from "../../redux/pizzasSlice";
+import { changeQuantity, deleteFromOrder } from "../../redux/pizzasSlice";
 import Modal from "../../components/Modal/Modal";
 import ConfirmModal from "../../components/Modal/ConfirmModal/ConfirmModal";
 import { useState } from "react";
@@ -22,6 +22,8 @@ const ShoppingList = () => {
     setShow(true);
   };
 
+  const edit = () => {};
+
   return (
     <>
       <div>
@@ -36,7 +38,7 @@ const ShoppingList = () => {
                 imageUrl,
                 toppings,
                 id,
-                amount,
+                quantity,
               }) => {
                 return (
                   <li key={`${id}${name}${id}`}>
@@ -54,7 +56,39 @@ const ShoppingList = () => {
                         );
                       })}
                     </ul>
-                    <p>x{amount}</p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const pizzaPrice = price / quantity;
+                        dispatch(
+                          changeQuantity({
+                            index: order.findIndex((pizza) => pizza.id === id),
+                            quantity: quantity - 1,
+                            price: price - pizzaPrice,
+                          })
+                        );
+                      }}
+                      disabled={quantity === 1}
+                    >
+                      -
+                    </button>
+                    <p>x{quantity}</p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const pizzaPrice = price / quantity;
+                        dispatch(
+                          changeQuantity({
+                            index: order.findIndex((pizza) => pizza.id === id),
+                            quantity: quantity + 1,
+                            price: price + pizzaPrice,
+                          })
+                        );
+                      }}
+                      disabled={quantity === 10}
+                    >
+                      +
+                    </button>
                     <button
                       type="button"
                       onClick={() => deleteFromOrderList(id)}
