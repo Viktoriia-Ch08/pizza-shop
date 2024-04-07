@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { selectOrder } from "../../redux/selectors";
+import { selectOrder } from "../../redux/pizzas/selectors";
 import { changeQuantity, deleteFromOrder } from "../../redux/dataSlice";
 import Modal from "../../components/Modal/Modal";
 import ConfirmModal from "../../components/Modal/ConfirmModal/ConfirmModal";
