@@ -1,19 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { toggleClick } from "./toggleClick";
 // import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useForm } from "react-hook-form";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../firebase";
+// import { createUserWithEmailAndPassword } from "firebase/auth";
 import { writeUserData } from "../../services/dataServices";
 import { Link } from "react-router-dom";
-import { setToken } from "../../redux/pizzasSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { registerThunk } from "../../redux/user/operations";
+import { selectUser } from "../../redux/user/selectors";
+import { auth } from "../../../firebase";
+import { onAuthStateChanged, updateProfile } from "firebase/auth";
 
 const Register = () => {
   const [toggleInput, setToggleInput] = useState("password");
   const [toggleIcon, setToggleIcon] = useState(false);
   const [toggleSecondIcon, setToggleSecondIcon] = useState(false);
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [databaseUser, setDatabaseUser] = useState(null);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
+      }
+    });
+  }, []);
 
   const {
     handleSubmit,
@@ -24,35 +40,25 @@ const Register = () => {
   } = useForm({
     mode: "onTouched",
   });
-
+  console.log(databaseUser);
   const signup = async (data) => {
     try {
-      const { displayName, email, password, number } = data;
+      dispatch(registerThunk(data)).then(() => {
+        if (currentUser) {
+          const { displayName, email, phoneNumber } = data;
 
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        displayName,
-        password,
-        phoneNumber
-      );
+          const newUser = {
+            uid: currentUser.uid,
+            displayName,
+            email,
+            phoneNumber,
+          };
 
-      console.log(userCredential);
-
-      if (userCredential.user) {
-        dispatch(setToken(userCredential.user.accessToken));
-
-        const newUser = {
-          uid: userCredential.user.uid,
-          displayName: displayName,
-          email: email,
-          phoneNumber: phoneNumber,
-        };
-        // записуємо нового юзера в базу даних
-        writeUserData(newUser);
-      }
-
-      reset();
+          // записуємо нового юзера в базу даних
+          writeUserData(newUser);
+          reset();
+        }
+      });
     } catch (error) {
       console.log(error.message);
     }

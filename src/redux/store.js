@@ -1,5 +1,5 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { pizzasReducer } from "./pizzasSlice";
+import { pizzasReducer } from "./pizzas/pizzasSlice";
 import {
   persistStore,
   persistReducer,
@@ -10,26 +10,31 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-
 import storage from "redux-persist/lib/storage";
+import { userReducer } from "./user/userSlice";
 
-const persistConfig = {
+const pizzasPersistConfig = {
   key: "data",
   storage,
-  whitelist: ["order", "token"],
+  whitelist: ["order"],
+};
+
+const userPersistConfig = {
+  key: "user",
+  storage,
+  whitelist: ["token", "isAuth", "user"],
 };
 
 const rootReducer = combineReducers({
-  data: persistReducer(persistConfig, pizzasReducer),
+  data: persistReducer(pizzasPersistConfig, pizzasReducer),
+  user: persistReducer(userPersistConfig, userReducer),
 });
 
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
+      serializableCheck: false,
     }),
 });
 

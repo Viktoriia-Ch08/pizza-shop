@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectOrder, selectPizzas } from "../../../redux/selectors";
-import { addOrder, changeQuantity } from "../../../redux/pizzasSlice";
+import { selectOrder, selectPizzas } from "../../../redux/pizzas/selectors";
+import { addOrder, changeQuantity } from "../../../redux/pizzas/pizzasSlice";
 import { successfullNotification } from "../../../services/notifications";
 import Toppings from "../../Toppings/Toppings";
 import { useNavigate } from "react-router-dom";

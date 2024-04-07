@@ -8,7 +8,7 @@ import {
   PizzaImage,
 } from "./Catalog.styled";
 import { useSelector } from "react-redux";
-import { selectPizzas } from "../../redux/selectors";
+import { selectPizzas } from "../../redux/pizzas/selectors";
 import { successfullNotification } from "../../services/notifications";
 import { Button } from "../../App.styled";
 import Modal from "../../components/Modal/Modal";

@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router";
 import Layout from "./components/Layout/Layout";
 import { lazy, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { fetchInfo } from "./redux/operations";
+import { fetchPizzas } from "./redux/pizzas/operations";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Catalog = lazy(() => import("./pages/Catalog/Catalog"));
@@ -13,8 +13,9 @@ const Login = lazy(() => import("./pages/Login/Login"));
 
 function App() {
   const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(fetchInfo());
+    dispatch(fetchPizzas());
   }, [dispatch]);
 
   return (

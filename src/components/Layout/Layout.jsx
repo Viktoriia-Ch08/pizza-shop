@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Outlet } from "react-router";
 import { Link } from "react-router-dom";
-import { logOut } from "../../redux/pizzasSlice";
+import { logOut } from "../../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 
 const Layout = () => {

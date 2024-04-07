@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebase";
+import { loginThunk } from "../../redux/user/operations";
 // import { readUserData } from "../../services/dataServices";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const [toggleInput, setToggleInput] = useState("password");
   const [toggleIcon, setToggleIcon] = useState(false);
-
+  const dispatch = useDispatch();
   const {
     handleSubmit,
     register,
@@ -20,13 +22,8 @@ const Login = () => {
   const logIn = async (data) => {
     debugger;
     try {
-      const { email, password } = data;
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log(userCredential);
+      // const { email, password } = data;
+      dispatch(loginThunk(data));
       // try {
       //   const user = await readUserData(userCredential.user.uid);
       //   console.log(user);
