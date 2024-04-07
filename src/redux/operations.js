@@ -1,5 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { readData } from "../services/dataServices";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase";
 
 export const fetchInfo = createAsyncThunk(
   "pizzas/fetchPizzas",

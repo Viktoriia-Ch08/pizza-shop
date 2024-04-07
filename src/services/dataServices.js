@@ -20,6 +20,23 @@ export function readData() {
   });
 }
 
+export function readUserData(uid) {
+  return new Promise((resolve, reject) => {
+    const dataRef = ref(database + "users/" + uid);
+    onValue(
+      dataRef,
+      (snapshot) => {
+        const data = snapshot.val();
+        resolve(data);
+      },
+      (error) => {
+        console.log(error.message);
+        reject(error.message);
+      }
+    );
+  });
+}
+
 export function getData(limit) {
   return new Promise((resolve, reject) => {
     const viewedCards = query(ref(database, "pizzas"), limitToFirst(limit));
@@ -38,20 +55,20 @@ export function getData(limit) {
 }
 
 export function writeUserData({
-  userId,
-  name = "none",
+  uid,
+  displayName = "none",
   email = "none",
-  number = "",
-  orders: { id, order },
+  phoneNumber = "",
+  orders = {},
   favorites = [],
 }) {
   try {
-    return set(ref(database, "users/" + userId), {
-      userId,
-      name,
+    return set(ref(database, "users/" + uid), {
+      uid,
+      displayName,
       email,
-      number,
-      orders: { id, order },
+      phoneNumber,
+      orders,
       favorites,
     });
   } catch (error) {

@@ -16,7 +16,7 @@ import storage from "redux-persist/lib/storage";
 const persistConfig = {
   key: "data",
   storage,
-  whitelist: ["order"],
+  whitelist: ["order", "token"],
 };
 
 const rootReducer = combineReducers({
