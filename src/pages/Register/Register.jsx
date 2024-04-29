@@ -10,6 +10,8 @@ import { registerThunk } from "../../redux/user/operations";
 import { selectUser } from "../../redux/user/selectors";
 import { auth } from "../../../firebase";
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
+import { updateUser } from "../../redux/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [toggleInput, setToggleInput] = useState("password");
@@ -17,19 +19,9 @@ const Register = () => {
   const [toggleSecondIcon, setToggleSecondIcon] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [databaseUser, setDatabaseUser] = useState(null);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
-        setCurrentUser(user);
-      } else {
-        setCurrentUser(null);
-      }
-    });
-  }, []);
+  const navigate = useNavigate();
+  // const [currentUser, setCurrentUser] = useState(null);
+  // const [databaseUser, setDatabaseUser] = useState(null);
 
   const {
     handleSubmit,
@@ -40,24 +32,24 @@ const Register = () => {
   } = useForm({
     mode: "onTouched",
   });
-  console.log(databaseUser);
+
   const signup = async (data) => {
     try {
-      dispatch(registerThunk(data)).then(() => {
-        if (currentUser) {
-          const { displayName, email, phoneNumber } = data;
+      dispatch(registerThunk(data)).then((userInfo) => {
+        const { displayName, email, phoneNumber } = data;
 
-          const newUser = {
-            uid: currentUser.uid,
-            displayName,
-            email,
-            phoneNumber,
-          };
+        const newUser = {
+          uid: userInfo.payload.uid,
+          displayName,
+          email,
+          phoneNumber,
+        };
 
-          // записуємо нового юзера в базу даних
-          writeUserData(newUser);
-          reset();
-        }
+        writeUserData(newUser);
+
+        dispatch(updateUser({ displayName, phoneNumber }));
+        reset();
+        navigate("/");
       });
     } catch (error) {
       console.log(error.message);
@@ -144,8 +136,6 @@ const Register = () => {
       >
         Submit
       </button>
-      {/* <AuthText>{t("signform.orsign")}</AuthText> */}
-      {/* <AuthList /> */}
       <Link to="/login">Log in</Link>
     </form>
   );

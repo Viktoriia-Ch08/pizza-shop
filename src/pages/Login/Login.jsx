@@ -2,16 +2,16 @@ import React, { useState } from "react";
 // import { toggleClick } from "../SignUpPage/toggleClick";
 // import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useForm } from "react-hook-form";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../firebase";
-import { loginThunk } from "../../redux/user/operations";
-// import { readUserData } from "../../services/dataServices";
+import { getUserData, loginThunk } from "../../redux/user/operations";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [toggleInput, setToggleInput] = useState("password");
   const [toggleIcon, setToggleIcon] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const {
     handleSubmit,
     register,
@@ -20,18 +20,12 @@ const Login = () => {
   } = useForm();
 
   const logIn = async (data) => {
-    debugger;
     try {
-      // const { email, password } = data;
-      dispatch(loginThunk(data));
-      // try {
-      //   const user = await readUserData(userCredential.user.uid);
-      //   console.log(user);
-      //   const { username } = user;
-
-      //   // logIn({ username, uid: userCredential.user.uid });
-      // } catch (error) {}
+      dispatch(loginThunk(data)).then((info) => {
+        dispatch(getUserData(info.payload.uid));
+      });
       reset();
+      navigate("/");
     } catch (error) {
       console.log(error.message);
     }

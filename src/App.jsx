@@ -1,8 +1,11 @@
 import { Route, Routes } from "react-router";
 import Layout from "./components/Layout/Layout";
 import { lazy, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchPizzas } from "./redux/pizzas/operations";
+import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
+import { getUserData } from "./redux/user/operations";
+import { selectUser } from "./redux/user/selectors";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Catalog = lazy(() => import("./pages/Catalog/Catalog"));
@@ -13,6 +16,7 @@ const Login = lazy(() => import("./pages/Login/Login"));
 
 function App() {
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
 
   useEffect(() => {
     dispatch(fetchPizzas());
@@ -23,7 +27,10 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
-        <Route path="/favorite" element={<Favorite />} />
+        <Route
+          path="/favorite"
+          element={<PrivateRoute component={<Favorite />} />}
+        />
         <Route path="/shopping-list" element={<ShoppingList />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginThunk, registerThunk } from "../user/operations";
+import { getUserData, loginThunk, registerThunk } from "../user/operations";
+import { update } from "firebase/database";
 
 const userSlice = createSlice({
   name: "user",
@@ -15,6 +16,13 @@ const userSlice = createSlice({
       state.user = {};
       state.token = "";
       state.isAuth = false;
+    },
+    updateUser(state, action) {
+      state.user = {
+        ...state.user,
+        phoneNumber: action.payload.phoneNumber,
+        displayName: action.payload.displayName,
+      };
     },
   },
   extraReducers: (builder) => {
@@ -32,9 +40,16 @@ const userSlice = createSlice({
         state.token = accessToken;
         state.isLoading = false;
         state.isAuth = true;
+      })
+      .addCase(getUserData.fulfilled, (state, action) => {
+        state.user = {
+          ...state.user,
+          phoneNumber: action.payload.phoneNumber,
+          displayName: action.payload.displayName,
+        };
       });
   },
 });
 
 export const userReducer = userSlice.reducer;
-export const { logOut } = userSlice.actions;
+export const { logOut, updateUser } = userSlice.actions;
