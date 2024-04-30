@@ -1,9 +1,9 @@
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { selectOrder } from "../../../redux/selectors";
 import { useSelector } from "react-redux";
 import { nanoid } from "nanoid";
+import { selectOrder } from "../../../redux/pizzas/selectors";
 
 const schema = yup
   .object({

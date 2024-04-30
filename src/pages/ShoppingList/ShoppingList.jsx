@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
-import { selectOrder } from "../../redux/pizzas/selectors";
 import {
   changeQuantity,
   deleteFromOrder,
 } from "../../redux/pizzas/pizzasSlice";
 import Modal from "../../components/Modal/Modal";
-import ConfirmModal from "../../components/Modal/ConfirmModal/ConfirmModal";
 import { useState } from "react";
 import { nanoid } from "nanoid";
 import GreetingModal from "../../components/Modal/GreetingModal/GreetingModal";
+import ConfirmModal from "../../components/Modal/ConfirmModal/ConfirmModal";
+import { selectOrder } from "../../redux/pizzas/selectors";
 
 const ShoppingList = () => {
   const order = useSelector(selectOrder);
