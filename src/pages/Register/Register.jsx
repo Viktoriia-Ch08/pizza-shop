@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 // import { toggleClick } from "./toggleClick";
 // import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useForm } from "react-hook-form";
@@ -8,8 +8,6 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerThunk } from "../../redux/user/operations";
 import { selectUser } from "../../redux/user/selectors";
-import { auth } from "../../../firebase";
-import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { updateUser } from "../../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
 

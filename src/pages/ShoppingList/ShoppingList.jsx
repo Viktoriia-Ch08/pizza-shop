@@ -9,6 +9,7 @@ import { nanoid } from "nanoid";
 import GreetingModal from "../../components/Modal/GreetingModal/GreetingModal";
 import ConfirmModal from "../../components/Modal/ConfirmModal/ConfirmModal";
 import { selectOrder } from "../../redux/pizzas/selectors";
+import { Link } from "react-router-dom";
 
 const ShoppingList = () => {
   const order = useSelector(selectOrder);
@@ -24,16 +25,12 @@ const ShoppingList = () => {
     }
   };
 
-  const finishOrder = () => {
-    setShow(true);
-  };
-
   return (
     <>
-      <div>
-        <ul>
-          {order.length > 0 &&
-            order.map(
+      {order.length > 0 ? (
+        <div>
+          <ul>
+            {order.map(
               ({
                 name,
                 description,
@@ -103,11 +100,23 @@ const ShoppingList = () => {
                 );
               }
             )}
-        </ul>
-        <button type="button" onClick={finishOrder}>
-          Confirm order
-        </button>
-      </div>
+          </ul>
+          <button type="button" onClick={() => setShow(true)}>
+            Confirm order
+          </button>
+        </div>
+      ) : (
+        <div>
+          <p>
+            Your cart is empty! You can see all pizzas by clicking on the button
+            below
+          </p>
+          <button>
+            <Link to={"/catalog"}>Catalog</Link>
+          </button>
+        </div>
+      )}
+
       {show && (
         <Modal setShow={setShow}>
           <ConfirmModal setShow={setShow} setConfirmed={setConfirmed} />
@@ -115,7 +124,7 @@ const ShoppingList = () => {
       )}
       {isConfirmed && (
         <Modal setShow={setConfirmed}>
-          <GreetingModal setShow={setConfirmed} />
+          <GreetingModal />
         </Modal>
       )}
     </>

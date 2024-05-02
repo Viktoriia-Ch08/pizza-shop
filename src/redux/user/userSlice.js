@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getUserData, loginThunk, registerThunk } from "../user/operations";
-import { update } from "firebase/database";
 
 const userSlice = createSlice({
   name: "user",
   initialState: {
     user: {},
+    orders: [],
     token: "",
     isAuth: false,
     isLoading: false,
@@ -14,6 +14,7 @@ const userSlice = createSlice({
   reducers: {
     logOut(state, _) {
       state.user = {};
+      state.orders = [];
       state.token = "";
       state.isAuth = false;
     },
@@ -23,6 +24,16 @@ const userSlice = createSlice({
         phoneNumber: action.payload.phoneNumber,
         displayName: action.payload.displayName,
       };
+    },
+    addToOrders(state, action) {
+      state.orders
+        ? state.orders.push(action.payload)
+        : (state.orders = [action.payload]);
+    },
+    changePizzaQuantity(state, action) {
+      state.user.userOrder[action.payload.index].quantity =
+        action.payload.quantity;
+      state.user.userOrder[action.payload.index].price = action.payload.price;
     },
   },
   extraReducers: (builder) => {
@@ -42,14 +53,23 @@ const userSlice = createSlice({
         state.isAuth = true;
       })
       .addCase(getUserData.fulfilled, (state, action) => {
+        debugger;
         state.user = {
           ...state.user,
           phoneNumber: action.payload.phoneNumber,
           displayName: action.payload.displayName,
         };
+        state.orders = action.payload.orders;
       });
+    // .addCase(updateOrderInfo.fulfilled, (state, action) => {
+    //   state.user = {
+    //     ...state.user,
+    //     userOrder: action.payload,
+    //   };
+    // });
   },
 });
 
 export const userReducer = userSlice.reducer;
-export const { logOut, updateUser } = userSlice.actions;
+export const { logOut, updateUser, addToOrders, changePizzaQuantity } =
+  userSlice.actions;

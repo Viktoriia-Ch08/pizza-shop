@@ -9,3 +9,8 @@ export const selectIsAuth = createSelector(
   selectUserInfo,
   (user) => user.isAuth
 );
+
+export const selectPreviousOrders = createSelector(
+  selectUserInfo,
+  (user) => user.orders
+);

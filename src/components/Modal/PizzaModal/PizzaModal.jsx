@@ -64,7 +64,6 @@ const PizzaModal = ({ id, setShow }) => {
   };
 
   const increaseQuantity = () => {
-    // debugger;
     setQuantity((prev) => prev + 1);
     setPizzaPrice((prev) => prev + pizzaPrice);
   };

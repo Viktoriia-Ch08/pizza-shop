@@ -13,7 +13,7 @@ const pizzasPersistConfig = {
 const userPersistConfig = {
   key: "user",
   storage,
-  whitelist: ["token", "isAuth", "user"],
+  whitelist: ["token", "isAuth", "user", "orders"],
 };
 
 const rootReducer = combineReducers({

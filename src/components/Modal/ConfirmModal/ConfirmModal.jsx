@@ -1,9 +1,16 @@
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import { selectOrder } from "../../../redux/pizzas/selectors";
+import { writeUserData } from "../../../services/dataServices";
+import {
+  selectPreviousOrders,
+  selectUser,
+} from "../../../redux/user/selectors";
+import { addToOrders } from "../../../redux/user/userSlice";
+import { clearOrder } from "../../../redux/pizzas/pizzasSlice";
 
 const schema = yup
   .object({
@@ -13,6 +20,11 @@ const schema = yup
 
 const ConfirmModal = ({ setShow, setConfirmed }) => {
   const order = useSelector(selectOrder);
+  const user = useSelector(selectUser);
+  const previousOrders = useSelector(selectPreviousOrders);
+
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -23,16 +35,35 @@ const ConfirmModal = ({ setShow, setConfirmed }) => {
 
   const sendOrder = async () => {
     try {
-      debugger;
-      await writeOrderData({
-        userId: nanoid(),
-        orders: {
+      dispatch(
+        addToOrders({
           id: nanoid(),
           order,
-        },
+        })
+      );
+      await writeUserData({
+        ...user,
+        orders: previousOrders
+          ? [
+              ...previousOrders,
+              {
+                id: nanoid(),
+                order,
+              },
+            ]
+          : [
+              {
+                id: nanoid(),
+                order,
+              },
+            ],
       });
-      //   setConfirmed(true);
-    } catch (error) {}
+      dispatch(clearOrder());
+      setShow(false);
+      setConfirmed(true);
+    } catch (error) {
+      console.log(error.message);
+    }
     setShow(false);
   };
 

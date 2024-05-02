@@ -22,6 +22,9 @@ const pizzasSlice = createSlice({
       state.order[action.payload.index].quantity = action.payload.quantity;
       state.order[action.payload.index].price = action.payload.price;
     },
+    clearOrder(state) {
+      state.order = [];
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchPizzas.fulfilled, (state, action) => {
@@ -37,5 +40,5 @@ const pizzasSlice = createSlice({
 });
 
 export const pizzasReducer = pizzasSlice.reducer;
-export const { addOrder, deleteFromOrder, changeQuantity } =
+export const { addOrder, deleteFromOrder, changeQuantity, clearOrder } =
   pizzasSlice.actions;
