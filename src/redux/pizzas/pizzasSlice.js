@@ -5,27 +5,10 @@ const pizzasSlice = createSlice({
   name: "pizza",
   initialState: {
     pizzas: [],
-    order: [],
     isLoading: false,
     error: null,
   },
-  reducers: {
-    addOrder(state, action) {
-      state.order.unshift(action.payload);
-    },
-    deleteFromOrder(state, action) {
-      state.order = state.order.filter(
-        (pizza) => JSON.stringify(pizza) !== JSON.stringify(action.payload)
-      );
-    },
-    changeQuantity(state, action) {
-      state.order[action.payload.index].quantity = action.payload.quantity;
-      state.order[action.payload.index].price = action.payload.price;
-    },
-    clearOrder(state) {
-      state.order = [];
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchPizzas.fulfilled, (state, action) => {
       state.isLoading = false;
@@ -40,5 +23,3 @@ const pizzasSlice = createSlice({
 });
 
 export const pizzasReducer = pizzasSlice.reducer;
-export const { addOrder, deleteFromOrder, changeQuantity, clearOrder } =
-  pizzasSlice.actions;

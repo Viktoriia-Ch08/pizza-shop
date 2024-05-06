@@ -3,14 +3,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
-import { selectOrder } from "../../../redux/pizzas/selectors";
-import { writeUserData } from "../../../services/dataServices";
+import { selectOrder } from "../../../redux/orders/selectors";
+import { writeOrdersData, writeUserData } from "../../../services/dataServices";
 import {
+  selectPhoneNumber,
   selectPreviousOrders,
   selectUser,
 } from "../../../redux/user/selectors";
 import { addToOrders } from "../../../redux/user/userSlice";
-import { clearOrder } from "../../../redux/pizzas/pizzasSlice";
+import {
+  addToConfirmedOrders,
+  clearOrder,
+} from "../../../redux/orders/ordersSlice";
 
 const schema = yup
   .object({
@@ -22,6 +26,7 @@ const ConfirmModal = ({ setShow, setConfirmed }) => {
   const order = useSelector(selectOrder);
   const user = useSelector(selectUser);
   const previousOrders = useSelector(selectPreviousOrders);
+  const phone = useSelector(selectPhoneNumber);
 
   const dispatch = useDispatch();
 
@@ -33,31 +38,26 @@ const ConfirmModal = ({ setShow, setConfirmed }) => {
     resolver: yupResolver(schema),
   });
 
-  const sendOrder = async () => {
+  const sendOrder = async ({ number }) => {
     try {
-      dispatch(
-        addToOrders({
-          id: nanoid(),
-          order,
-        })
-      );
-      await writeUserData({
-        ...user,
-        orders: previousOrders
-          ? [
-              ...previousOrders,
-              {
-                id: nanoid(),
-                order,
-              },
-            ]
-          : [
-              {
-                id: nanoid(),
-                order,
-              },
-            ],
-      });
+      const newOrder = {
+        id: nanoid(),
+        phoneNumber: number,
+        data: new Date().toLocaleTimeString(),
+        isDone: false,
+        order,
+      };
+
+      if (Object.keys(user).length) {
+        dispatch(addToOrders(newOrder));
+        await writeUserData({
+          ...user,
+          orders: previousOrders ? [...previousOrders, newOrder] : [newOrder],
+        });
+      }
+      dispatch(addToConfirmedOrders(newOrder));
+      await writeOrdersData(newOrder);
+
       dispatch(clearOrder());
       setShow(false);
       setConfirmed(true);
@@ -78,6 +78,7 @@ const ConfirmModal = ({ setShow, setConfirmed }) => {
           {errors.number && <span>{errors.number.message}</span>}
           <input
             placeholder="233-22-22"
+            defaultValue={phone ? phone : ""}
             {...register("number", {
               required: true,
             })}

@@ -3,11 +3,12 @@ import { pizzasReducer } from "./pizzas/pizzasSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { userReducer } from "./user/userSlice";
+import { ordersReducer } from "./orders/ordersSlice";
 
-const pizzasPersistConfig = {
+const ordersPersistConfig = {
   key: "data",
   storage,
-  whitelist: ["order"],
+  whitelist: ["order", "confirmedOrders"],
 };
 
 const userPersistConfig = {
@@ -17,8 +18,9 @@ const userPersistConfig = {
 };
 
 const rootReducer = combineReducers({
-  data: persistReducer(pizzasPersistConfig, pizzasReducer),
+  data: pizzasReducer,
   user: persistReducer(userPersistConfig, userReducer),
+  orders: persistReducer(ordersPersistConfig, ordersReducer),
 });
 
 export const store = configureStore({

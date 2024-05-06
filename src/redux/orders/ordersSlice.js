@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchOrders } from "./operations";
 
 const ordersSlice = createSlice({
   name: "orders",
@@ -9,11 +10,6 @@ const ordersSlice = createSlice({
     error: null,
   },
   reducers: {
-    getOrders(state, action) {
-      action.payload
-        ? state.confirmedOrders.push(action.payload)
-        : (state.confirmedOrders = []);
-    },
     addOrder(state, action) {
       state.order.unshift(action.payload);
     },
@@ -34,16 +30,12 @@ const ordersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // builder.addCase(fetchPizzas.fulfilled, (state, action) => {
-    //   state.isLoading = false;
-    //   state.pizzas = [...state.pizzas, ...action.payload.pizzas];
-    //   state.confirmedOrders.length
-    //     ? (state.confirmedOrders = [
-    //         ...state.confirmedOrders,
-    //         ...action.payload.confirmedOrders,
-    //       ])
-    //     : [action.payload.confirmedOrders];
-    // });
+    builder.addCase(fetchOrders.fulfilled, (state, action) => {
+      state.isLoading = false;
+      action.payload.orders
+        ? state.confirmedOrders.push(action.payload)
+        : (state.confirmedOrders = []);
+    });
     //   .addMatcher(isAnyOf(fetchAdverts.pending, fetchMakes.pending), state => {
     //     state.isLoading = true;
     //     state.error = null;
@@ -53,7 +45,6 @@ const ordersSlice = createSlice({
 
 export const ordersReducer = ordersSlice.reducer;
 export const {
-  getOrders,
   addOrder,
   deleteFromOrder,
   changeQuantity,
