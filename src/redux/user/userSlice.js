@@ -30,11 +30,6 @@ const userSlice = createSlice({
         ? state.orders.push(action.payload)
         : (state.orders = [action.payload]);
     },
-    changePizzaQuantity(state, action) {
-      state.user.userOrder[action.payload.index].quantity =
-        action.payload.quantity;
-      state.user.userOrder[action.payload.index].price = action.payload.price;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -53,7 +48,6 @@ const userSlice = createSlice({
         state.isAuth = true;
       })
       .addCase(getUserData.fulfilled, (state, action) => {
-        debugger;
         state.user = {
           ...state.user,
           phoneNumber: action.payload.phoneNumber,
@@ -71,5 +65,4 @@ const userSlice = createSlice({
 });
 
 export const userReducer = userSlice.reducer;
-export const { logOut, updateUser, addToOrders, changePizzaQuantity } =
-  userSlice.actions;
+export const { logOut, updateUser, addToOrders } = userSlice.actions;

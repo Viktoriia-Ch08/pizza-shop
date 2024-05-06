@@ -14,3 +14,8 @@ export const selectPreviousOrders = createSelector(
   selectUserInfo,
   (user) => user.orders
 );
+
+export const selectPhoneNumber = createSelector(
+  selectUserInfo,
+  (user) => user.user.phoneNumber
+);
