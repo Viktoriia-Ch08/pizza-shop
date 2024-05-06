@@ -4,6 +4,8 @@ import { lazy, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPizzas } from "./redux/pizzas/operations";
 import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
+import { fetchOrders } from "./redux/orders/operations";
+import { getOrders } from "./redux/orders/ordersSlice";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Catalog = lazy(() => import("./pages/Catalog/Catalog"));
@@ -17,6 +19,12 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchPizzas());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchOrders()).then((data) => {
+      dispatch(getOrders(data.payload.orders));
+    });
   }, [dispatch]);
 
   return (

@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchData } from "../../services/dataServices";
 
-export const fetchPizzas = createAsyncThunk(
-  "pizzas/fetchPizzas",
+export const fetchOrders = createAsyncThunk(
+  "orders/fetchOrders",
   async (_, thunkAPI) => {
     try {
       const response = await fetchData();

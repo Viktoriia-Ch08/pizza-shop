@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectOrder, selectPizzas } from "../../../redux/pizzas/selectors";
-import { addOrder, changeQuantity } from "../../../redux/pizzas/pizzasSlice";
+import { selectPizzas } from "../../../redux/pizzas/selectors";
+import { addOrder, changeQuantity } from "../../../redux/orders/ordersSlice";
 import { successfullNotification } from "../../../services/notifications";
 import Toppings from "../../Toppings/Toppings";
 import { useNavigate } from "react-router-dom";
+import { selectOrder } from "../../../redux/orders/selectors";
 
 const PizzaModal = ({ id, setShow }) => {
   const pizzas = useSelector(selectPizzas);

@@ -3,7 +3,7 @@ import { database } from "../../firebase";
 
 export const LIMIT_NUMBER = 3;
 
-export function readPizzasData() {
+export function fetchData() {
   return new Promise((resolve, reject) => {
     const dataRef = ref(database);
     onValue(
@@ -70,6 +70,26 @@ export function writeUserData({
       phoneNumber,
       orders,
       favorites,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+export function writeOrdersData({
+  id,
+  phoneNumber = "",
+  isDone = false,
+  data = "",
+  order = [],
+}) {
+  try {
+    return set(ref(database, "orders/" + id), {
+      id,
+      phoneNumber,
+      isDone,
+      data,
+      order,
     });
   } catch (error) {
     console.log(error.message);

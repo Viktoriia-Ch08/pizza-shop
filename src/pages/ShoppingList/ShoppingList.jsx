@@ -2,13 +2,13 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   changeQuantity,
   deleteFromOrder,
-} from "../../redux/pizzas/pizzasSlice";
+} from "../../redux/orders/ordersSlice";
 import Modal from "../../components/Modal/Modal";
 import { useState } from "react";
 import { nanoid } from "nanoid";
 import GreetingModal from "../../components/Modal/GreetingModal/GreetingModal";
 import ConfirmModal from "../../components/Modal/ConfirmModal/ConfirmModal";
-import { selectOrder } from "../../redux/pizzas/selectors";
+import { selectOrder } from "../../redux/orders/selectors";
 import { Link } from "react-router-dom";
 
 const ShoppingList = () => {
