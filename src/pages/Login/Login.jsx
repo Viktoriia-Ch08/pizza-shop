@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-// import { toggleClick } from "../SignUpPage/toggleClick";
-// import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useForm } from "react-hook-form";
 import { getUserData, loginThunk } from "../../redux/user/operations";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import togglePassword from "../../services/togglePassword";
 
 const Login = () => {
   const [toggleInput, setToggleInput] = useState("password");
@@ -48,17 +48,13 @@ const Login = () => {
           placeholder="Password"
           className="form-control"
         />
-        {/* <svg
+        <svg
           onClick={() =>
-            toggleClick(toggleInput, setToggleInput, setToggleIcon)
+            togglePassword(toggleInput, setToggleInput, setToggleIcon)
           }
         >
-          {toggleIcon ? (
-            <EyeIcon as={RiEyeOffLine} />
-          ) : (
-            <EyeIcon as={RiEyeLine} />
-          )}
-        </SvgSpan> */}
+          {toggleIcon ? <RiEyeOffLine /> : <RiEyeLine />}
+        </svg>
         {errors.password && <span>{errors.password.message}</span>}
       </label>
       <button
