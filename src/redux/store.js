@@ -14,7 +14,7 @@ const ordersPersistConfig = {
 const userPersistConfig = {
   key: "user",
   storage,
-  whitelist: ["token", "isAuth", "user", "orders"],
+  whitelist: ["token", "isAuth", "user", "preOrders"],
 };
 
 const rootReducer = combineReducers({

@@ -4,7 +4,7 @@ import {
   deleteFromOrder,
 } from "../../redux/orders/ordersSlice";
 import Modal from "../../components/Modal/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
 import GreetingModal from "../../components/Modal/GreetingModal/GreetingModal";
 import ConfirmModal from "../../components/Modal/ConfirmModal/ConfirmModal";
@@ -15,7 +15,17 @@ const ShoppingList = () => {
   const order = useSelector(selectOrder);
   const [show, setShow] = useState(false);
   const [isConfirmed, setConfirmed] = useState(false);
+  const [orderPrice, setOrderPrice] = useState(0);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (order.length > 0) {
+      const price = order.reduce((acc, el) => (acc += el.price), 0);
+      setOrderPrice(price);
+    } else {
+      return;
+    }
+  }, [order]);
 
   const deleteFromOrderList = (id) => {
     const pizzaToDelete = order.find((pizza) => pizza.id === id);
@@ -101,6 +111,7 @@ const ShoppingList = () => {
               }
             )}
           </ul>
+          <p>All: {orderPrice}</p>
           <button type="button" onClick={() => setShow(true)}>
             Confirm order
           </button>
@@ -112,7 +123,7 @@ const ShoppingList = () => {
             below
           </p>
           <button>
-            <Link to={"/catalog"}>Catalog</Link>
+            <Link to={"/"}>Catalog</Link>
           </button>
         </div>
       )}

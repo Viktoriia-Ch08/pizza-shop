@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { getUserData, loginThunk, registerThunk } from "../user/operations";
 
 const userSlice = createSlice({
   name: "user",
   initialState: {
     user: {},
-    orders: [],
+    preOrders: [],
     token: "",
     isAuth: false,
     isLoading: false,
@@ -14,7 +14,7 @@ const userSlice = createSlice({
   reducers: {
     logOut(state, _) {
       state.user = {};
-      state.orders = [];
+      state.preOrders = [];
       state.token = "";
       state.isAuth = false;
     },
@@ -26,9 +26,9 @@ const userSlice = createSlice({
       };
     },
     addToOrders(state, action) {
-      state.orders
-        ? state.orders.push(action.payload)
-        : (state.orders = [action.payload]);
+      state.preOrders
+        ? state.preOrders.unshift(action.payload)
+        : (state.preOrders = [action.payload]);
     },
   },
   extraReducers: (builder) => {
@@ -53,14 +53,26 @@ const userSlice = createSlice({
           phoneNumber: action.payload.phoneNumber,
           displayName: action.payload.displayName,
         };
-        state.orders = action.payload.orders;
-      });
-    // .addCase(updateOrderInfo.fulfilled, (state, action) => {
-    //   state.user = {
-    //     ...state.user,
-    //     userOrder: action.payload,
-    //   };
-    // });
+        state.preOrders = action.payload.preOrders;
+      })
+      .addMatcher(
+        isAnyOf(registerThunk.pending, loginThunk.pending, getUserData.pending),
+        (state) => {
+          state.isLoading = true;
+          state.error = null;
+        }
+      )
+      .addMatcher(
+        isAnyOf(
+          registerThunk.rejected,
+          loginThunk.rejected,
+          getUserData.rejected
+        ),
+        (state) => {
+          state.isLoading = false;
+          state.error = action.payload;
+        }
+      );
   },
 });
 

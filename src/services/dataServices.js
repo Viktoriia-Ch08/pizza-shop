@@ -59,7 +59,7 @@ export function writeUserData({
   displayName = "none",
   email = "none",
   phoneNumber = "",
-  orders = [],
+  preOrders = [],
   favorites = [],
 }) {
   try {
@@ -68,7 +68,7 @@ export function writeUserData({
       displayName,
       email,
       phoneNumber,
-      orders,
+      preOrders,
       favorites,
     });
   } catch (error) {

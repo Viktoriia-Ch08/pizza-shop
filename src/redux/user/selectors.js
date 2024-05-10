@@ -10,9 +10,9 @@ export const selectIsAuth = createSelector(
   (user) => user.isAuth
 );
 
-export const selectPreviousOrders = createSelector(
+export const selectPreOrders = createSelector(
   selectUserInfo,
-  (user) => user.orders
+  (user) => user.preOrders
 );
 
 export const selectPhoneNumber = createSelector(

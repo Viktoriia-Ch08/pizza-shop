@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { fetchOrders } from "./operations";
 
 const ordersSlice = createSlice({
@@ -30,16 +30,21 @@ const ordersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchOrders.fulfilled, (state, action) => {
-      state.isLoading = false;
-      action.payload.orders
-        ? state.confirmedOrders.push(action.payload)
-        : (state.confirmedOrders = []);
-    });
-    //   .addMatcher(isAnyOf(fetchAdverts.pending, fetchMakes.pending), state => {
-    //     state.isLoading = true;
-    //     state.error = null;
-    //   })
+    builder
+      .addCase(fetchOrders.fulfilled, (state, action) => {
+        state.isLoading = false;
+        action.payload.orders
+          ? state.confirmedOrders.push(action.payload)
+          : (state.confirmedOrders = []);
+      })
+      .addMatcher(isAnyOf(fetchOrders.pending), (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addMatcher(isAnyOf(fetchOrders.rejected), (state) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
   },
 });
 
