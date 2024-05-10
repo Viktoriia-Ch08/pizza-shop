@@ -14,9 +14,11 @@ const PizzaModal = ({ id, setShow }) => {
   const [chosenToppings, setChosenToppings] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [pizzaPrice, setPizzaPrice] = useState(0);
+  const [changedPizzaPrice, setChangedPizzaPrice] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { name, description, type, price, imageUrl, toppings } = chosenPizza;
+
   const toppingsName =
     chosenToppings.length > 0
       ? chosenToppings.map((topping) => topping.name).join("")
@@ -33,13 +35,17 @@ const PizzaModal = ({ id, setShow }) => {
     setPizzaPrice(pizzas[index].price + toppingsPrice);
   }, [toppingsPrice]);
 
+  useEffect(() => {
+    setChangedPizzaPrice(pizzaPrice * quantity);
+  }, [pizzaPrice, quantity]);
+
   const saveOrder = () => {
     const newPizza = {
       ...chosenPizza,
       toppings: chosenToppings,
       id: `${chosenPizza.name}${toppingsName}`,
       quantity,
-      price: pizzaPrice,
+      price: changedPizzaPrice,
     };
 
     const existingPizzaIndex = order.findIndex(
@@ -48,7 +54,6 @@ const PizzaModal = ({ id, setShow }) => {
 
     if (existingPizzaIndex !== -1) {
       const pizza = order[existingPizzaIndex];
-      debugger;
       dispatch(
         changeQuantity({
           index: existingPizzaIndex,
@@ -66,12 +71,10 @@ const PizzaModal = ({ id, setShow }) => {
 
   const increaseQuantity = () => {
     setQuantity((prev) => prev + 1);
-    setPizzaPrice((prev) => prev + pizzaPrice);
   };
 
   const decreaseQuantity = () => {
     setQuantity((prev) => prev - 1);
-    setPizzaPrice((prev) => prev - chosenPizza.price);
   };
 
   return (
@@ -80,7 +83,7 @@ const PizzaModal = ({ id, setShow }) => {
       <h2>{name}</h2>
       <p>{description}</p>
       <p>{type}</p>
-      <p>{pizzaPrice}</p>
+      <p>{changedPizzaPrice}</p>
       <ul>
         <Toppings
           chosenPizza={chosenPizza}

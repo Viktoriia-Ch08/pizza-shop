@@ -14,8 +14,12 @@ const Layout = () => {
     <header>
       <nav>
         <Link to="/">Home</Link>
-        <Link to="/catalog">Catalog</Link>
-        {isAuth && <Link to="/favorite">Favorite</Link>}
+        {isAuth && (
+          <>
+            <Link to="/favorite">Favorite</Link>
+            <Link to="/preOrders">Previous Orders</Link>
+          </>
+        )}
         <Link to="/shopping-list">ShoppingList</Link>
         {!isAuth && (
           <>

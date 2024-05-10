@@ -7,7 +7,7 @@ import { selectOrder } from "../../../redux/orders/selectors";
 import { writeOrdersData, writeUserData } from "../../../services/dataServices";
 import {
   selectPhoneNumber,
-  selectPreviousOrders,
+  selectPreOrders,
   selectUser,
 } from "../../../redux/user/selectors";
 import { addToOrders } from "../../../redux/user/userSlice";
@@ -25,7 +25,7 @@ const schema = yup
 const ConfirmModal = ({ setShow, setConfirmed }) => {
   const order = useSelector(selectOrder);
   const user = useSelector(selectUser);
-  const previousOrders = useSelector(selectPreviousOrders);
+  const preOrders = useSelector(selectPreOrders);
   const phone = useSelector(selectPhoneNumber);
 
   const dispatch = useDispatch();
@@ -52,7 +52,7 @@ const ConfirmModal = ({ setShow, setConfirmed }) => {
         dispatch(addToOrders(newOrder));
         await writeUserData({
           ...user,
-          orders: previousOrders ? [...previousOrders, newOrder] : [newOrder],
+          preOrders: preOrders ? [...preOrders, newOrder] : [newOrder],
         });
       }
       dispatch(addToConfirmedOrders(newOrder));

@@ -1,4 +1,4 @@
-import { ToppingImage } from "../../pages/Catalog/Catalog.styled";
+import { ToppingImage } from "../../pages/Home/Home.styled";
 
 const Toppings = ({
   chosenPizza,

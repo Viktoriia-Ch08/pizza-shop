@@ -7,8 +7,8 @@ import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
 import { fetchOrders } from "./redux/orders/operations";
 
 const Home = lazy(() => import("./pages/Home/Home"));
-const Catalog = lazy(() => import("./pages/Catalog/Catalog"));
 const Favorite = lazy(() => import("./pages/Favorite/Favorite"));
+const PreOrders = lazy(() => import("./pages/PreOrders/PreOrders"));
 const ShoppingList = lazy(() => import("./pages/ShoppingList/ShoppingList"));
 const Register = lazy(() => import("./pages/Register/Register"));
 const Login = lazy(() => import("./pages/Login/Login"));
@@ -28,10 +28,13 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="/catalog" element={<Catalog />} />
         <Route
           path="/favorite"
           element={<PrivateRoute component={<Favorite />} />}
+        />
+        <Route
+          path="/preOrders"
+          element={<PrivateRoute component={<PreOrders />} />}
         />
         <Route path="/shopping-list" element={<ShoppingList />} />
         <Route path="/register" element={<Register />} />
