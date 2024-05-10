@@ -1,25 +1,21 @@
 import React, { useState } from "react";
-// import { toggleClick } from "./toggleClick";
-// import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useForm } from "react-hook-form";
-// import { createUserWithEmailAndPassword } from "firebase/auth";
 import { writeUserData } from "../../services/dataServices";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { registerThunk } from "../../redux/user/operations";
-import { selectUser } from "../../redux/user/selectors";
 import { updateUser } from "../../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import togglePassword from "../../services/togglePassword";
 
 const Register = () => {
   const [toggleInput, setToggleInput] = useState("password");
   const [toggleIcon, setToggleIcon] = useState(false);
   const [toggleSecondIcon, setToggleSecondIcon] = useState(false);
+  const [toggleSecondInput, setToggleSecondInput] = useState("password");
   const dispatch = useDispatch();
-  const user = useSelector(selectUser);
   const navigate = useNavigate();
-  // const [currentUser, setCurrentUser] = useState(null);
-  // const [databaseUser, setDatabaseUser] = useState(null);
 
   const {
     handleSubmit,
@@ -88,22 +84,18 @@ const Register = () => {
           placeholder="Password"
           className="form-control"
         />
-        {/* <SvgSpan
+        <svg
           onClick={() =>
-            toggleClick(toggleInput, setToggleInput, setToggleIcon)
+            togglePassword(toggleInput, setToggleInput, setToggleIcon)
           }
         >
-          {toggleIcon ? (
-            <EyeIcon as={RiEyeOffLine} />
-          ) : (
-            <EyeIcon as={RiEyeLine} />
-          )}
-        </SvgSpan> */}
+          {toggleIcon ? <RiEyeOffLine /> : <RiEyeLine />}
+        </svg>
         {errors.password && <span>{errors.password.message}</span>}
       </label>
       <label>
         <input
-          type={toggleInput}
+          type={toggleSecondInput}
           {...register("repeatPassword", {
             required: true,
             validate: (value) => value === password || "Passwords do not match",
@@ -111,17 +103,17 @@ const Register = () => {
           placeholder="Confirm Password"
           className="form-control"
         />
-        {/* <SvgSpan
+        <svg
           onClick={() =>
-            toggleClick(toggleInput, setToggleInput, setToggleSecondIcon)
+            togglePassword(
+              toggleSecondInput,
+              setToggleSecondInput,
+              setToggleSecondIcon
+            )
           }
         >
-          {toggleSecondIcon ? (
-            <EyeIcon as={RiEyeOffLine} />
-          ) : (
-            <EyeIcon as={RiEyeLine} />
-          )}
-        </SvgSpan> */}
+          {toggleSecondIcon ? <RiEyeOffLine /> : <RiEyeLine />}
+        </svg>
         {errors.repeatPassword && <span>{errors.repeatPassword.message}</span>}
       </label>
 
