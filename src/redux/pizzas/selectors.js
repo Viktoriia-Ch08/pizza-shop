@@ -7,3 +7,8 @@ export const selectPizzaTypeFilter = createSelector(
   selectData,
   (data) => data.pizzaTypeFilter
 );
+
+export const selectLimitedPizzas = createSelector(
+  selectData,
+  (data) => data.limitedPizzas
+);

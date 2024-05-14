@@ -2,6 +2,7 @@ import { limitToFirst, onValue, query, ref, set } from "firebase/database";
 import { database } from "../../firebase";
 
 export const LIMIT_NUMBER = 3;
+let nextLimit = LIMIT_NUMBER + 3;
 
 export function fetchData() {
   return new Promise((resolve, reject) => {
@@ -37,9 +38,32 @@ export function fetchUserData(uid) {
   });
 }
 
-export function getData(limit) {
+export function fetchLimitedPizzasData() {
   return new Promise((resolve, reject) => {
-    const viewedCards = query(ref(database, "pizzas"), limitToFirst(limit));
+    const viewedCards = query(
+      ref(database, "pizzas"),
+      limitToFirst(LIMIT_NUMBER)
+    );
+    onValue(
+      viewedCards,
+      (snapshot) => {
+        const data = snapshot.val();
+        resolve(data);
+      },
+      (error) => {
+        console.log(error.message);
+        reject(error.message);
+      }
+    );
+  });
+}
+
+export function fetchNextPizzasCards() {
+  return new Promise((resolve, reject) => {
+    const viewedCards = query(ref(database, "pizzas"), limitToFirst(nextLimit));
+
+    nextLimit += 3;
+
     onValue(
       viewedCards,
       (snapshot) => {

@@ -1,10 +1,11 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
-import { fetchPizzas } from "./operations";
+import { fetchLimitedPizzas, fetchNextPizzas, fetchPizzas } from "./operations";
 
 const pizzasSlice = createSlice({
   name: "pizza",
   initialState: {
     pizzas: [],
+    limitedPizzas: [],
     pizzaTypeFilter: "",
     isLoading: false,
     error: null,
@@ -14,23 +15,45 @@ const pizzasSlice = createSlice({
       state.pizzaTypeFilter = action.payload;
     },
     filterPizzas(state, action) {
-      state.pizzas = [...action.payload];
+      state.limitedPizzas = [...action.payload];
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPizzas.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.pizzas = [...state.pizzas, ...action.payload.pizzas];
+        state.pizzas = [...action.payload.pizzas];
       })
-      .addMatcher(isAnyOf(fetchPizzas.pending), (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addMatcher(isAnyOf(fetchPizzas.rejected), (state) => {
+      .addCase(fetchLimitedPizzas.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
-      });
+        state.limitedPizzas = [...action.payload];
+      })
+      .addCase(fetchNextPizzas.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.limitedPizzas = [...action.payload];
+      })
+      .addMatcher(
+        isAnyOf(
+          fetchPizzas.pending,
+          fetchLimitedPizzas.pending,
+          fetchNextPizzas.pending
+        ),
+        (state) => {
+          state.isLoading = true;
+          state.error = null;
+        }
+      )
+      .addMatcher(
+        isAnyOf(
+          fetchPizzas.rejected,
+          fetchLimitedPizzas.rejected,
+          fetchNextPizzas.rejected
+        ),
+        (state) => {
+          state.isLoading = false;
+          state.error = action.payload;
+        }
+      );
   },
 });
 

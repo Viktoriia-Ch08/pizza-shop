@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  LIMIT_NUMBER,
-  getData,
-  writeUserData,
-} from "../../services/dataServices";
+import { LIMIT_NUMBER, writeUserData } from "../../services/dataServices";
 import {
   Card,
   CardSet,
@@ -13,10 +9,10 @@ import {
 } from "./Home.styled";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  selectLimitedPizzas,
   selectPizzaTypeFilter,
   selectPizzas,
 } from "../../redux/pizzas/selectors";
-import { successfullNotification } from "../../services/notifications";
 import { Button } from "../../App.styled";
 import Modal from "../../components/Modal/Modal";
 import PizzaModal from "../../components/Modal/PizzaModal/PizzaModal";
@@ -28,26 +24,21 @@ import {
 } from "../../redux/user/selectors";
 import Filters from "../../components/Filters/Filters";
 import { filterPizzas } from "../../redux/pizzas/pizzasSlice";
+import { fetchNextPizzas } from "../../redux/pizzas/operations";
+import { successfullNotification } from "../../services/notifications";
 
 const Home = () => {
-  const [limitedCards, setLimitedCards] = useState([]);
-  const [limit, setLimit] = useState(LIMIT_NUMBER);
-  const [lastPage, setLastPage] = useState(false);
   const [show, setShow] = useState(false);
-  const pizzas = useSelector(selectPizzas);
   const [chosenPizzaId, setChosenPizzaId] = useState(null);
-  const dispatch = useDispatch();
+
+  const pizzas = useSelector(selectPizzas);
   const favorite = useSelector(selectFavorite);
   const user = useSelector(selectUser);
   const isAuth = useSelector(selectIsAuth);
   const filteredType = useSelector(selectPizzaTypeFilter);
+  const limitedPizzas = useSelector(selectLimitedPizzas);
 
-  useEffect(() => {
-    const fetchLimitedCardsNumber = async () => {
-      setLimitedCards(await getData(limit));
-    };
-    fetchLimitedCardsNumber();
-  }, [limit]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (filteredType === "") return;
@@ -58,14 +49,6 @@ const Home = () => {
     if (!favorite) return;
     writeUserData({ ...user, favorite: [...favorite] });
   }, [favorite]);
-
-  const getNextCards = () => {
-    if (limit + LIMIT_NUMBER >= pizzas.length) {
-      setLastPage(true);
-      successfullNotification("You rich the end of the list!");
-    }
-    setLimit((prev) => prev + LIMIT_NUMBER);
-  };
 
   const toggleFavorite = (newFavorite) => {
     if (!favorite) {
@@ -84,18 +67,28 @@ const Home = () => {
   };
 
   const filterCards = () => {
+    if (filteredType === "all") {
+      dispatch(filterPizzas(pizzas));
+      return;
+    }
     const newList = pizzas.filter((el) => el.type === filteredType);
-    console.log(newList);
     dispatch(filterPizzas(newList));
+  };
+
+  const loadMoreCards = () => {
+    if (limitedPizzas.length + LIMIT_NUMBER >= pizzas.length) {
+      successfullNotification("You rich the end of the list!");
+    }
+    dispatch(fetchNextPizzas());
   };
 
   return (
     <section className="main-container">
-      {pizzas.length > 0 && (
+      {limitedPizzas.length > 0 && (
         <>
           <Filters />
           <CardSet>
-            {limitedCards.map(
+            {limitedPizzas.map(
               ({ name, description, type, price, imageUrl, id }) => {
                 return (
                   <Card key={`${name}${price}${type}`}>
@@ -137,8 +130,8 @@ const Home = () => {
               }
             )}
           </CardSet>
-          {!lastPage && (
-            <Button onClick={() => getNextCards()}>Load More...</Button>
+          {filteredType === "" && !(limitedPizzas.length >= pizzas.length) && (
+            <Button onClick={() => loadMoreCards()}>Load More...</Button>
           )}
         </>
       )}

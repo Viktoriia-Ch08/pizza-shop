@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router";
 import Layout from "./components/Layout/Layout";
 import { lazy, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { fetchPizzas } from "./redux/pizzas/operations";
+import { fetchLimitedPizzas, fetchPizzas } from "./redux/pizzas/operations";
 import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
 import { fetchOrders } from "./redux/orders/operations";
 
@@ -18,6 +18,10 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchPizzas());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchLimitedPizzas());
   }, [dispatch]);
 
   useEffect(() => {
