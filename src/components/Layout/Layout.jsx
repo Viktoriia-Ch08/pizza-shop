@@ -1,15 +1,19 @@
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { Outlet } from "react-router";
 import { Link } from "react-router-dom";
 import { logOut } from "../../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsAuth } from "../../redux/user/selectors";
 import { useNavigate } from "react-router-dom";
+import Modal from "../Modal/Modal";
+import ContactsModal from "../Modal/ContactsModal/ContactsModal";
 
 const Layout = () => {
   const dispatch = useDispatch();
   const isAuth = useSelector(selectIsAuth);
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+
   return (
     <header>
       <nav>
@@ -27,6 +31,9 @@ const Layout = () => {
             <Link to="/login">Login</Link>
           </>
         )}
+        <button type="button" onClick={() => setShow(true)}>
+          Contacts
+        </button>
       </nav>
       {isAuth && (
         <button
@@ -39,7 +46,11 @@ const Layout = () => {
           LogOut
         </button>
       )}
-
+      {show && (
+        <Modal setShow={setShow}>
+          <ContactsModal />
+        </Modal>
+      )}
       <Suspense>
         <Outlet />
       </Suspense>
