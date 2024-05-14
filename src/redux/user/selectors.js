@@ -19,3 +19,8 @@ export const selectPhoneNumber = createSelector(
   selectUserInfo,
   (user) => user.user.phoneNumber
 );
+
+export const selectFavorite = createSelector(
+  selectUserInfo,
+  (user) => user.user.favorite
+);

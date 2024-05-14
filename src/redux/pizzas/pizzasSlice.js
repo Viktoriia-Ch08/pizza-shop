@@ -5,10 +5,18 @@ const pizzasSlice = createSlice({
   name: "pizza",
   initialState: {
     pizzas: [],
+    pizzaTypeFilter: "",
     isLoading: false,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    setTypeFilterValue(state, action) {
+      state.pizzaTypeFilter = action.payload;
+    },
+    filterPizzas(state, action) {
+      state.pizzas = [...action.payload];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPizzas.fulfilled, (state, action) => {
@@ -27,3 +35,4 @@ const pizzasSlice = createSlice({
 });
 
 export const pizzasReducer = pizzasSlice.reducer;
+export const { setTypeFilterValue, filterPizzas } = pizzasSlice.actions;

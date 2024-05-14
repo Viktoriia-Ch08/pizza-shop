@@ -4,7 +4,13 @@ import { getUserData, loginThunk, registerThunk } from "../user/operations";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: {},
+    user: {
+      displayName: "",
+      email: "",
+      uid: "",
+      phoneNumber: "",
+      favorite: [],
+    },
     preOrders: [],
     token: "",
     isAuth: false,
@@ -19,16 +25,23 @@ const userSlice = createSlice({
       state.isAuth = false;
     },
     updateUser(state, action) {
-      state.user = {
-        ...state.user,
-        phoneNumber: action.payload.phoneNumber,
-        displayName: action.payload.displayName,
-      };
+      state.user.phoneNumber = action.payload.phoneNumber;
+      state.user.displayName = action.payload.displayName;
     },
     addToOrders(state, action) {
       state.preOrders
         ? state.preOrders.unshift(action.payload)
         : (state.preOrders = [action.payload]);
+    },
+    addToFavorite(state, action) {
+      state.user.favorite
+        ? state.user.favorite.unshift(action.payload)
+        : (state.user.favorite = [action.payload]);
+    },
+    deleteFromFavorite(state, action) {
+      state.user.favorite = state.user.favorite.filter(
+        (el) => el.id !== action.payload.id
+      );
     },
   },
   extraReducers: (builder) => {
@@ -52,8 +65,11 @@ const userSlice = createSlice({
           ...state.user,
           phoneNumber: action.payload.phoneNumber,
           displayName: action.payload.displayName,
+          favorite: action.payload.favorite,
         };
         state.preOrders = action.payload.preOrders;
+        state.isLoading = false;
+        state.isAuth = true;
       })
       .addMatcher(
         isAnyOf(registerThunk.pending, loginThunk.pending, getUserData.pending),
@@ -77,4 +93,10 @@ const userSlice = createSlice({
 });
 
 export const userReducer = userSlice.reducer;
-export const { logOut, updateUser, addToOrders } = userSlice.actions;
+export const {
+  logOut,
+  updateUser,
+  addToOrders,
+  addToFavorite,
+  deleteFromFavorite,
+} = userSlice.actions;

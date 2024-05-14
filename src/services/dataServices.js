@@ -60,7 +60,7 @@ export function writeUserData({
   email = "none",
   phoneNumber = "",
   preOrders = [],
-  favorites = [],
+  favorite = [],
 }) {
   try {
     return set(ref(database, "users/" + uid), {
@@ -69,7 +69,7 @@ export function writeUserData({
       email,
       phoneNumber,
       preOrders,
-      favorites,
+      favorite,
     });
   } catch (error) {
     console.log(error.message);

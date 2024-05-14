@@ -7,7 +7,7 @@ const PreOrders = () => {
   const preOrders = useSelector(selectPreOrders);
   return (
     <>
-      {preOrders ? (
+      {preOrders && preOrders.length > 0 ? (
         <ul>
           {preOrders.map(({ data, id, phoneNumber, order }) => {
             return (
@@ -33,9 +33,8 @@ const PreOrders = () => {
                             <img src={imageUrl} alt={name} />
                             <h2>{name}</h2>
                             <p>{description}</p>
-                            <p>{type}</p>
-                            <p>{price}</p>
-                            <p>{quantity}</p>
+                            <p>{price}$</p>
+                            <p>Amount: {quantity}</p>
 
                             <ul>
                               {toppings &&
